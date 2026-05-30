@@ -1,0 +1,11 @@
+git:latest
+workflow-aggregator:latest
+pipeline-stage-view:latest
+blueocean:latest
+docker-workflow:latest
+credentials-binding:latest
+environment-injector:latest
+ws-cleanup:latest
+build-timeout:latest
+timestamper:latest
+ansicolor:latest
