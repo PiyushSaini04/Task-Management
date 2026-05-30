@@ -1,10 +1,11 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, APIRouter
+
+from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import settings
-from app.db.session import engine, Base
-# Explicitly import to register with Base.metadata
+
 from app.api.v1.tasks import router as tasks_router
+from app.core.config import settings
+from app.db.session import Base, engine
 
 
 @asynccontextmanager
@@ -21,9 +22,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Containerized Task Management System API",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
-
 
 
 @app.get("/api/v1/health")
@@ -31,7 +31,6 @@ async def health_check():
     return {"status": "healthy"}
 
 
-# Configure CORS Middleware using dynamic settings.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
@@ -40,10 +39,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# Create API version router and include task endpoints
 api_router = APIRouter(prefix="/api/v1")
 api_router.include_router(tasks_router, tags=["tasks"])
 
-# Include versioned api router in the application
 app.include_router(api_router)
