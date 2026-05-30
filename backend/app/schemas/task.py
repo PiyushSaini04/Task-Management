@@ -27,6 +27,7 @@ class TaskCreate(TaskBase):
     """
     pass
 
+
 class TaskUpdate(BaseModel):
     """
     Schema for updating an existing task. All fields are optional.
