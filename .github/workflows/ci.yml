@@ -64,16 +64,34 @@ jobs:
       - name: Build and run docker containers
         run: docker compose up --build -d
 
-      - name: Wait for services to stabilise
-        run: sleep 30
+      - name: Show running containers
+        run: docker compose ps
+
+      - name: Show container logs
+        run: docker compose logs
+
+      - name: Wait for backend
+        run: |
+          for i in {1..30}; do
+            if curl -f http://localhost:5000/api/v1/health; then
+              echo "Backend is ready"
+              exit 0
+            fi
+            echo "Waiting for backend..."
+            sleep 5
+          done
+
+          echo "Backend failed to start"
+          docker compose logs
+          exit 1
 
       - name: Verify health check
         run: |
-          curl --fail -s http://localhost/api/v1/health
+          curl --fail -s http://localhost:5000/api/v1/health
 
       - name: Verify task creation (POST /api/v1/tasks returns 201)
         run: |
-          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d '{"title": "CI Test Task", "description": "Verify CI works"}' http://localhost/api/v1/tasks)
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d '{"title": "CI Test Task", "description": "Verify CI works"}' http://localhost:5000/api/v1/tasks)
           echo "POST Status: $STATUS_CODE"
           if [ "$STATUS_CODE" -ne 201 ]; then
             echo "Expected 201 but got $STATUS_CODE"
@@ -82,7 +100,7 @@ jobs:
 
       - name: Verify task listing (GET /api/v1/tasks returns 200 and non-empty list)
         run: |
-          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/api/v1/tasks)
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/api/v1/tasks)
           echo "GET Status: $STATUS_CODE"
           if [ "$STATUS_CODE" -ne 200 ]; then
             echo "Expected 200 but got $STATUS_CODE"
@@ -90,7 +108,7 @@ jobs:
           fi
           
           # Check that the list is non-empty and contains our created task
-          CONTENT=$(curl -s http://localhost/api/v1/tasks)
+          CONTENT=$(curl -s http://localhost:5000/api/v1/tasks)
           echo "GET Content: $CONTENT"
           if ! echo "$CONTENT" | grep -q "CI Test Task"; then
             echo "Created task was not found in listing!"
