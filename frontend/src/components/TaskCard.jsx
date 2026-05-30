@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Edit2, Trash2, Check, X, Calendar, Clock, AlertTriangle } from 'lucide-react';
 
 /**
