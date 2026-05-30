@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional, Literal
 from pydantic import BaseModel, Field, field_validator
 
+
 class TaskBase(BaseModel):
     """
     Base Pydantic schema for task properties.
@@ -20,6 +21,7 @@ class TaskBase(BaseModel):
         if not v.strip():
             raise ValueError("title must not be empty or contain only whitespace")
         return v.strip()
+
 
 class TaskCreate(TaskBase):
     """
@@ -47,6 +49,7 @@ class TaskUpdate(BaseModel):
                 raise ValueError("title must not be empty or contain only whitespace")
             return v.strip()
         return v
+
 
 class TaskResponse(BaseModel):
     """
