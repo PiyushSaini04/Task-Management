@@ -1,6 +1,7 @@
 from typing import List
 from pydantic_settings import BaseSettings
 
+
 class Settings(BaseSettings):
     """
     Application settings loaded from environment variables or .env file.
@@ -18,10 +19,12 @@ class Settings(BaseSettings):
             return []
         if self.CORS_ORIGINS.strip() == "*":
             return ["*"]
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        return [origin.strip()
+                for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
 
     class Config:
         env_file = ".env"
         case_sensitive = True
+
 
 settings = Settings()

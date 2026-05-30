@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from app.db.session import Base
 
+
 class Task(Base):
     """
     SQLAlchemy model representing the 'tasks' table in PostgreSQL.

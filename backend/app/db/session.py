@@ -19,11 +19,13 @@ AsyncSessionLocal = async_sessionmaker(
     autoflush=False,
 )
 
+
 class Base(DeclarativeBase):
     """
     Base class for all SQLAlchemy database models.
     """
     pass
+
 
 async def get_db():
     """

@@ -3,8 +3,9 @@ from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.db.session import engine, Base
-from app.models.task import Task  # Explicitly import to register with Base.metadata
+# Explicitly import to register with Base.metadata
 from app.api.v1.tasks import router as tasks_router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

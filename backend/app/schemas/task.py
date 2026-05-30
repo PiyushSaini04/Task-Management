@@ -8,9 +8,14 @@ class TaskBase(BaseModel):
     """
     Base Pydantic schema for task properties.
     """
-    title: str = Field(..., min_length=1, max_length=255, description="The title of the task")
-    description: Optional[str] = Field(default=None, max_length=1000, description="Optional detailed description")
-    status: Literal["pending", "completed"] = Field(default="pending", description="Task status")
+    title: str = Field(..., min_length=1, max_length=255,
+                       description="The title of the task")
+    description: Optional[str] = Field(
+        default=None,
+        max_length=1000,
+        description="Optional detailed description")
+    status: Literal["pending", "completed"] = Field(
+        default="pending", description="Task status")
 
     @field_validator("title")
     @classmethod
@@ -19,7 +24,8 @@ class TaskBase(BaseModel):
         Custom validator to ensure the title doesn't consist of only whitespace.
         """
         if not v.strip():
-            raise ValueError("title must not be empty or contain only whitespace")
+            raise ValueError(
+                "title must not be empty or contain only whitespace")
         return v.strip()
 
 
@@ -40,13 +46,15 @@ class TaskUpdate(BaseModel):
 
     @field_validator("title")
     @classmethod
-    def title_must_not_be_whitespace_if_provided(cls, v: Optional[str]) -> Optional[str]:
+    def title_must_not_be_whitespace_if_provided(
+            cls, v: Optional[str]) -> Optional[str]:
         """
         Ensures that if a title is updated, it's not empty or just whitespace.
         """
         if v is not None:
             if not v.strip():
-                raise ValueError("title must not be empty or contain only whitespace")
+                raise ValueError(
+                    "title must not be empty or contain only whitespace")
             return v.strip()
         return v
 
