@@ -17,6 +17,7 @@ async def lifespan(app: FastAPI):
         await conn.run_sync(Base.metadata.create_all)
     yield
 
+
 app = FastAPI(
     title="Containerized Task Management System API",
     version="1.0.0",
@@ -28,7 +29,7 @@ app = FastAPI(
 async def health_check():
     return {"status": "healthy"}
 
-    
+
 # Configure CORS Middleware using dynamic settings.
 app.add_middleware(
     CORSMiddleware,
