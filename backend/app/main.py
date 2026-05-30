@@ -24,7 +24,8 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# ADD THIS
+
+
 @app.get("/api/v1/health")
 async def health_check():
     return {"status": "healthy"}
@@ -38,6 +39,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Create API version router and include task endpoints
 api_router = APIRouter(prefix="/api/v1")
