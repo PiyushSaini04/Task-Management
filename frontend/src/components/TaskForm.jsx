@@ -2,17 +2,20 @@ import { useState } from 'react';
 import { PlusCircle, Loader2 } from 'lucide-react';
 
 /**
- * TaskForm component renders a form to create a new task.
+ * TaskForm component renders a form to create a new task with Category and Due Date support.
  * 
  * @component
  * @param {Object} props
  * @param {function} props.onTaskCreate - Function that handles task submission, must return a promise
  * @param {boolean} props.isSubmitting - Disables the button and shows a loader if true
+ * @param {Array} props.categories - Array of active category objects { name: string, color: string }
  * @returns {React.ReactElement} The rendered TaskForm component
  */
-export default function TaskForm({ onTaskCreate, isSubmitting }) {
+export default function TaskForm({ onTaskCreate, isSubmitting, categories }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [dueDate, setDueDate] = useState('');
   const [validationError, setValidationError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -29,12 +32,17 @@ export default function TaskForm({ onTaskCreate, isSubmitting }) {
     try {
       await onTaskCreate({
         title: cleanTitle,
-        description: description.trim()
+        description: description.trim() || null,
+        category: category || null,
+        due_date: dueDate ? new Date(dueDate).toISOString() : null,
+        status: 'pending'
       });
       setTitle('');
       setDescription('');
+      setCategory('');
+      setDueDate('');
     } catch (err) {
-      // Errors are caught and bubbled to App.jsx for general warning notifications
+      // Errors are caught and handled by App.jsx
     }
   };
 
@@ -85,6 +93,35 @@ export default function TaskForm({ onTaskCreate, isSubmitting }) {
           maxLength={1000}
           disabled={isSubmitting}
         />
+      </div>
+
+      {/* Row for Category & Due Date */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-slate-400">Category</label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="glass-input px-3.5 py-2.5 rounded-xl text-xs text-slate-300 focus:ring-1 focus:ring-indigo-500"
+            disabled={isSubmitting}
+          >
+            <option value="">No Category</option>
+            {categories && categories.map(c => (
+              <option key={c.name} value={c.name}>{c.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-slate-400">Due Date</label>
+          <input
+            type="datetime-local"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            className="glass-input px-3.5 py-2 rounded-xl text-xs text-slate-300 focus:ring-1 focus:ring-indigo-500"
+            disabled={isSubmitting}
+          />
+        </div>
       </div>
 
       <button

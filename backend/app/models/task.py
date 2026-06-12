@@ -33,6 +33,14 @@ class Task(Base):
         default="pending",
         server_default="pending"
     )
+    category: Mapped[str] = mapped_column(
+        String(50),
+        nullable=True
+    )
+    due_date: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

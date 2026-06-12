@@ -1,18 +1,19 @@
-// import React from 'react';
 import { ClipboardList } from 'lucide-react';
 import TaskCard from './TaskCard';
 
 /**
  * TaskList component renders a grid of TaskCards or a fallback empty state.
+ * Passes down the categories list to enable color matching.
  * 
  * @component
  * @param {Object} props
  * @param {Array} props.tasks - List of task objects to display
  * @param {function} props.onUpdateTask - Callback handler passed down to TaskCard for task updates
  * @param {function} props.onDeleteTask - Callback handler passed down to TaskCard for task deletion
+ * @param {Array} props.categories - Array of active category objects { name: string, color: string }
  * @returns {React.ReactElement} The rendered TaskList component
  */
-export default function TaskList({ tasks, onUpdateTask, onDeleteTask }) {
+export default function TaskList({ tasks, onUpdateTask, onDeleteTask, categories }) {
   if (tasks.length === 0) {
     return (
       <div className="glass-card p-12 rounded-2xl flex flex-col items-center justify-center text-center border-dashed border-white/5 animate-fade-in shadow-lg">
@@ -38,6 +39,7 @@ export default function TaskList({ tasks, onUpdateTask, onDeleteTask }) {
           task={task}
           onUpdateTask={onUpdateTask}
           onDeleteTask={onDeleteTask}
+          categories={categories}
         />
       ))}
     </div>
